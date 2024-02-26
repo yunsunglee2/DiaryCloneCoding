@@ -9,6 +9,7 @@ import { Diary } from "./Diary";
 import { DiaryList } from "./DiaryList";
 import "./App.css";
 import MyButton from "./components/button";
+import MyHeader from "./components/myHeader";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -111,30 +112,8 @@ function App() {
           <DiaryList />
         </myDispatchContext.Provider>
       </myContext.Provider> */}
-      <MyButton
-        type="positive"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="negative"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="default"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <div>이곳은 홈 입니다</div>
-      <div>App.js</div>
-      <div>HOME</div>
+      <MyHeader headtext={'App'}  leftchild={'왼쪽버튼'} rightchild={'오른쪽버튼'} />
+      
     </div>
   );
 }
