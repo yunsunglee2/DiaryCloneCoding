@@ -1,43 +1,51 @@
-import React, { useRef, useEffect, useMemo, useCallback, useReducer } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  useReducer,
+} from "react";
 import { Diary } from "./Diary";
 import { DiaryList } from "./DiaryList";
-import './App.css'
+import "./App.css";
+import MyButton from "./components/button";
 
 const reducer = (state, action) => {
-  switch(action.type) {
-    case 'INIT': {
-      return action.data
+  switch (action.type) {
+    case "INIT": {
+      return action.data;
     }
-    case 'CREATE': {
+    case "CREATE": {
       const createdDate = new Date().getTime();
       const newItem = {
         ...action.data,
-        createdDate
-      }
+        createdDate,
+      };
       return [newItem, ...state];
     }
-    case 'REMOVE': {
+    case "REMOVE": {
       return state.filter((item) => item.id !== action.targetId);
     }
-    case 'EDIT': {
-      return state.map((item)=> 
-        item.id === action.targetId ? {...item, content: action.newContent} : item
-      )
+    case "EDIT": {
+      return state.map((item) =>
+        item.id === action.targetId
+          ? { ...item, content: action.newContent }
+          : item
+      );
     }
-    default :
-    return state;
-
+    default:
+      return state;
   }
-}
+};
 
 export const myContext = React.createContext();
 export const myDispatchContext = React.createContext();
 
 function App() {
   // const [dumyList, setDumyList] = useState([]);
-  const [dumyList, dispatch] = useReducer(reducer, [])
+  const [dumyList, dispatch] = useReducer(reducer, []);
   const dataRef = useRef(0);
-  
+
   const getComments = async () => {
     const comments = await (
       await fetch("https://jsonplaceholder.typicode.com/comments")
@@ -51,7 +59,7 @@ function App() {
         createdAt: new Date().getTime(),
       };
     });
-    dispatch({type: 'INIT', data: initialData})
+    dispatch({ type: "INIT", data: initialData });
     // setDumyList(initialData);
   };
 
@@ -59,37 +67,40 @@ function App() {
     getComments();
   }, []);
 
-  const onCreate =  useCallback((author, content, emotion) => {
-    dispatch({type: 'CREATE', data: { author, content, emotion, id: dataRef.current }})
+  const onCreate = useCallback((author, content, emotion) => {
+    dispatch({
+      type: "CREATE",
+      data: { author, content, emotion, id: dataRef.current },
+    });
     dataRef.current++;
-  },[]);
+  }, []);
 
   const onDelete = useCallback((targetId) => {
-    dispatch({type: 'REMOVE', targetId})
+    dispatch({ type: "REMOVE", targetId });
     console.log(`${targetId}가 삭제되었습니다.`);
   }, []);
 
   const onEdit = useCallback((targetId, newContent) => {
-    dispatch({type: 'EDIT', targetId, newContent})
+    dispatch({ type: "EDIT", targetId, newContent });
   }, []);
 
-  const memoizedFncs = useMemo(()=>{
-    return {onCreate, onDelete, onEdit}
-  }, [])
+  const memoizedFncs = useMemo(() => {
+    return { onCreate, onDelete, onEdit };
+  }, []);
 
   const diaryAnalyst = useMemo(() => {
-    console.log('일기분석시작')
-    const goodEmotionDiary = dumyList.filter((item) => item.emotion > 3).length
+    console.log("일기분석시작");
+    const goodEmotionDiary = dumyList.filter((item) => item.emotion > 3).length;
     const badEmotionDiary = dumyList.length - goodEmotionDiary;
     const goodRatio = goodEmotionDiary / dumyList.length;
-    return {goodEmotionDiary, badEmotionDiary, goodRatio};
-  },[dumyList.length])
+    return { goodEmotionDiary, badEmotionDiary, goodRatio };
+  }, [dumyList.length]);
 
-  const {goodEmotionDiary, badEmotionDiary, goodRatio} = diaryAnalyst;
+  const { goodEmotionDiary, badEmotionDiary, goodRatio } = diaryAnalyst;
 
   return (
     <div className="App">
-    <myContext.Provider value={dumyList}>
+      {/* <myContext.Provider value={dumyList}>
       <myDispatchContext.Provider value={memoizedFncs}>
         <div>
           <div>좋은 감정의 일기: {goodEmotionDiary}개</div>
@@ -99,7 +110,31 @@ function App() {
           <Diary />
           <DiaryList />
         </myDispatchContext.Provider>
-      </myContext.Provider>
+      </myContext.Provider> */}
+      <MyButton
+        type="positive"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <MyButton
+        type="negative"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <MyButton
+        type="default"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <div>이곳은 홈 입니다</div>
+      <div>App.js</div>
+      <div>HOME</div>
     </div>
   );
 }

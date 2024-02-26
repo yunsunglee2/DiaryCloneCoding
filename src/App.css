@@ -1,11 +1,58 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap');
 
-.App {
-  padding: 20px;
-  font-family: "Yeon Sung", system-ui;
+/* 프로젝트 기초 공사 기본 폰트 적용하기  */
+body {
+  background-color: #f6f6f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Nanum Pen Script", cursive;
-  font-weight: 400;
-  font-style: normal;
+  min-height: 100vh;
+  margin: 0px;
 }
 
-/* 프로젝트 기초 공사 기본 폰트 적용하기  */
+@media (min-width: 650px) {
+  .App {
+    width: 640px;
+  }
+}
+@media (max-width: 650px) {
+  .App {
+    width: 90vw;
+  }
+#root {
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.App {
+  min-height: 100vh;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+}
+}
+
+.mybutton {
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  white-space: nowrap;
+  font-family: "Nanum Pen Script", cursive;
+}
+.mybutton_positive {
+  background-color: #64c964;
+  color: white;
+}
+
+.mybutton_default {
+  background-color: #ececec;
+  color: white;
+}
+
+.mybutton_negative {
+  background-color: #fd565f;
+  color: white
+}

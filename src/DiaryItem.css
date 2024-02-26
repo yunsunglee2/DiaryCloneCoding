@@ -2,9 +2,3 @@
   display: flex;
   flex-direction: column;
 }
-
-button {
-  display: inline;
-  width: 100px;
-  height: 20px;
-}
