@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useMemo, useCallback, useReducer } from "react";
 import { Diary } from "./Diary";
 import { DiaryList } from "./DiaryList";
+import './App.css'
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -87,7 +88,7 @@ function App() {
   const {goodEmotionDiary, badEmotionDiary, goodRatio} = diaryAnalyst;
 
   return (
-    <>
+    <div className="App">
     <myContext.Provider value={dumyList}>
       <myDispatchContext.Provider value={memoizedFncs}>
         <div>
@@ -99,7 +100,7 @@ function App() {
           <DiaryList />
         </myDispatchContext.Provider>
       </myContext.Provider>
-    </>
+    </div>
   );
 }
 
