@@ -1,141 +1,91 @@
-import React, {
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  useReducer,
-} from "react";
-import { Diary } from "./Diary";
-import { DiaryList } from "./DiaryList";
-import "./App.css";
-import MyButton from "./components/button";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pagess/Home";
+import Diary from "./pagess/Diary";
+import New from "./pagess/New";
+import Edit from "./pagess/Edit";
+import React, { useReducer, useRef } from "react";
 
 const reducer = (state, action) => {
+  let newState = [];
+
   switch (action.type) {
     case "INIT": {
       return action.data;
     }
     case "CREATE": {
-      const createdDate = new Date().getTime();
-      const newItem = {
-        ...action.data,
-        createdDate,
-      };
-      return [newItem, ...state];
+      newState = [action.data, ...state];
+      break;
     }
     case "REMOVE": {
-      return state.filter((item) => item.id !== action.targetId);
+      newState = state.filter((it) => it.id !== action.targetId);
+      break;
     }
     case "EDIT": {
-      return state.map((item) =>
-        item.id === action.targetId
-          ? { ...item, content: action.newContent }
-          : item
+      newState = state.map((it) =>
+        it.id === action.data.id ? { ...action.data } : it
       );
+      break;
     }
     default:
       return state;
   }
+  return newState;
 };
 
-export const myContext = React.createContext();
-export const myDispatchContext = React.createContext();
+const DiaryStateContext = React.createContext();
+const DiaryDispatchContext = React.createContext();
 
 function App() {
-  // const [dumyList, setDumyList] = useState([]);
-  const [dumyList, dispatch] = useReducer(reducer, []);
-  const dataRef = useRef(0);
+  const [data, dispatch] = useReducer([]);
+  const dataId = useRef(0);
 
-  const getComments = async () => {
-    const comments = await (
-      await fetch("https://jsonplaceholder.typicode.com/comments")
-    ).json();
-    const initialData = comments.slice(0, 20).map((item) => {
-      return {
-        author: item.email,
-        id: dataRef.current++,
-        content: item.body,
-        emotion: Math.floor(Math.random() * 5) + 1,
-        createdAt: new Date().getTime(),
-      };
-    });
-    dispatch({ type: "INIT", data: initialData });
-    // setDumyList(initialData);
-  };
-
-  useEffect(() => {
-    getComments();
-  }, []);
-
-  const onCreate = useCallback((author, content, emotion) => {
+  // CREATE 함수
+  const OnCreate = (date, content, emotion) => {
     dispatch({
       type: "CREATE",
-      data: { author, content, emotion, id: dataRef.current },
+      data: {
+        id: dataId.current,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
     });
-    dataRef.current++;
-  }, []);
+    dataId.current++;
+  };
 
-  const onDelete = useCallback((targetId) => {
+  // REMOVE
+  const onRemove = (targetId) => {
     dispatch({ type: "REMOVE", targetId });
-    console.log(`${targetId}가 삭제되었습니다.`);
-  }, []);
+  };
 
-  const onEdit = useCallback((targetId, newContent) => {
-    dispatch({ type: "EDIT", targetId, newContent });
-  }, []);
-
-  const memoizedFncs = useMemo(() => {
-    return { onCreate, onDelete, onEdit };
-  }, []);
-
-  const diaryAnalyst = useMemo(() => {
-    console.log("일기분석시작");
-    const goodEmotionDiary = dumyList.filter((item) => item.emotion > 3).length;
-    const badEmotionDiary = dumyList.length - goodEmotionDiary;
-    const goodRatio = goodEmotionDiary / dumyList.length;
-    return { goodEmotionDiary, badEmotionDiary, goodRatio };
-  }, [dumyList.length]);
-
-  const { goodEmotionDiary, badEmotionDiary, goodRatio } = diaryAnalyst;
+  // EDIT
+  const onEdit = (date, content, emotion, targetId) => {
+    dispatch({
+      type: "EDIT",
+      data: {
+        id: targetId,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
+    });
+  };
 
   return (
-    <div className="App">
-      {/* <myContext.Provider value={dumyList}>
-      <myDispatchContext.Provider value={memoizedFncs}>
-        <div>
-          <div>좋은 감정의 일기: {goodEmotionDiary}개</div>
-          <div>안좋은 감점의 일기: {badEmotionDiary}개</div>
-          <div>좋은 일기 비율: {goodRatio*100}%</div>
-        </div>
-          <Diary />
-          <DiaryList />
-        </myDispatchContext.Provider>
-      </myContext.Provider> */}
-      <MyButton
-        type="positive"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="negative"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="default"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <div>이곳은 홈 입니다</div>
-      <div>App.js</div>
-      <div>HOME</div>
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={{OnCreate, onRemove, onEdit}}>
+        <BrowserRouter>
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<Home />}></Route>
+              <Route path="/new" element={<New />}></Route>
+              {/* <Route path="/Edit" element={<Edit />}></Route> */}
+              <Route path="/Diary" element={<Diary />}></Route>
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
