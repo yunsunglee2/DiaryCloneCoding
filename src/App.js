@@ -4,6 +4,7 @@ import Diary from "./pagess/Diary";
 import New from "./pagess/New";
 import Edit from "./pagess/Edit";
 import React, { useReducer, useRef } from "react";
+import './App.css';
 
 const reducer = (state, action) => {
   let newState = [];
@@ -79,7 +80,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />}></Route>
               <Route path="/new" element={<New />}></Route>
-              {/* <Route path="/Edit" element={<Edit />}></Route> */}
+              <Route path="/Edit" element={<Edit />}></Route>
               <Route path="/Diary" element={<Diary />}></Route>
             </Routes>
           </div>
