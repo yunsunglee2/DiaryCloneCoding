@@ -176,3 +176,95 @@ header .head_btn_left {
 .diaryItem .button_section {
   min-width: 70px;
 }
+
+/* DiaryEdiotr css */
+.Editor {
+}
+
+.Editor .editor_section {
+  margin-bottom: 40px;
+}
+
+.Editor h4 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.Editor input,
+textarea {
+  border: none;
+  border-radius: 5px;
+  background-color: #ececec;
+  padding: 20px;
+  font-size: 20px;
+  font-family: "Nanum Pen Script";
+}
+
+.Editor input {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+.Editor textarea {
+  width: 100%;
+  min-height: 200px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.Editor .bottom_section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Editor .emotion_list_wrapper {
+  display: flex;
+  justify-content: space-around;
+  gap: 2%;
+}
+
+.Editor .emotion_list_wrapper .emotionItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+.Editor .emotion_list_wrapper .emotionItem img {
+  width: 50%;
+  margin-bottom: 10px;
+}
+.Editor .emotion_list_wrapper .emotionItem span {
+  font-size: 18px;
+}
+
+.Editor .emotion_list_wrapper .emotionItem_off {
+  background-color: #ECECEC;
+}
+.Editor .emotion_list_wrapper .emotionItem_on_1 {
+  background-color: #64c964;
+}
+.Editor .emotion_list_wrapper .emotionItem_on_2 {
+  background-color: #9dd772;
+}
+.Editor .emotion_list_wrapper .emotionItem_on_3 {
+  background-color: #fdce17;
+}
+.Editor .emotion_list_wrapper .emotionItem_on_4 {
+  background-color: #fd8446;
+}
+.Editor .emotion_list_wrapper .emotionItem_on_5 {
+  background-color: #fd565f;
+}
+.Editor .control_box {
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+.Editor .control_box .mybutton {
+  margin-left: 10px;
+}
+
+

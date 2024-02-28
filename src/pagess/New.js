@@ -1,10 +1,8 @@
-import MyHeader from "../components/MyHeader";
+import DiaryEditor from "../components/DiaryEditor";
 
 const New = () => {
   return (
-    <div className="new">
-      <MyHeader />
-    </div>
+    <DiaryEditor />
   )
 }
 
