@@ -1,7 +1,9 @@
+import MyHeader from "../components/MyHeader";
+
 const New = () => {
   return (
-    <div>
-      뉴
+    <div className="new">
+      <MyHeader />
     </div>
   )
 }
