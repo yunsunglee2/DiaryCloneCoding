@@ -1,8 +1,9 @@
 import MyHeader from "./MyHeader";
 import MyButton from "./MyButton";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import EmotionItem from "./EmotionItem";
+import { DiaryDispatchContext } from "../App";
 
 const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
@@ -38,16 +39,26 @@ const emotionList = [
     emotion_img: process.env.PUBLIC_URL + `/assets/emotion5.png`,
   },
 ];
-
+// --------------------------------------------------------------------
 const DiaryEditor = () => {
   const [date, setDate] = useState(getStringDate(new Date()));
   const [emotion, setEmotion] = useState(3);
   const [content, setContent] = useState("");
   const textAreaRef = useRef();
   const navigate = useNavigate();
-
+  const { onCreate } = useContext(DiaryDispatchContext);
+  console.log(date);
   const handleClick = (emotion) => {
     setEmotion(emotion);
+  };
+
+  const handleSubmit = () => {
+    if (content.length < 1) {
+      textAreaRef.current.focus();
+      return;
+    }
+    onCreate(date, content, emotion);
+    navigate('/', { replace: true });
   };
 
   return (
@@ -101,9 +112,9 @@ const DiaryEditor = () => {
           ></textarea>
         </section>
         <section>
-        <div className="control_box">
-          <MyButton text='취소하기' onClick={()=> navigate(-1)} />
-          <MyButton text='작성완료' type='positive' onClick={()=> alert('작성완료!')} />
+          <div className="control_box">
+            <MyButton text="취소하기" onClick={() => navigate(-1)} />
+            <MyButton text="작성완료" type="positive" onClick={handleSubmit} />
           </div>
         </section>
       </div>

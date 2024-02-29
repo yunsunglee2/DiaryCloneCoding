@@ -81,7 +81,7 @@ function App() {
   const dataId = useRef(0);
 
   // CREATE 함수
-  const OnCreate = (date, content, emotion) => {
+  const onCreate = (date, content, emotion) => {
     dispatch({
       type: "CREATE",
       data: {
@@ -114,7 +114,7 @@ function App() {
 
   return (
     <DiaryStateContext.Provider value={data}>
-      <DiaryDispatchContext.Provider value={{OnCreate, onRemove, onEdit}}>
+      <DiaryDispatchContext.Provider value={{onCreate, onRemove, onEdit}}>
         <BrowserRouter>
           <div className="App">
             <Routes>
