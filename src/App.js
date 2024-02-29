@@ -9,95 +9,112 @@ import { Diary } from "./Diary";
 import { DiaryList } from "./DiaryList";
 import "./App.css";
 import MyButton from "./components/button";
-import MyHeader from "./components/myHeader";
 
 const reducer = (state, action) => {
+  let newState = [];
+
   switch (action.type) {
     case "INIT": {
       return action.data;
     }
     case "CREATE": {
-      const createdDate = new Date().getTime();
-      const newItem = {
-        ...action.data,
-        createdDate,
-      };
-      return [newItem, ...state];
+      newState = [action.data, ...state];
+      break;
     }
     case "REMOVE": {
-      return state.filter((item) => item.id !== action.targetId);
+      newState = state.filter((it) => it.id !== action.targetId);
+      break;
     }
     case "EDIT": {
-      return state.map((item) =>
-        item.id === action.targetId
-          ? { ...item, content: action.newContent }
-          : item
+      newState = state.map((it) =>
+        it.id === action.data.id ? { ...action.data } : it
       );
+      break;
     }
     default:
       return state;
   }
+  return newState;
 };
 
-export const myContext = React.createContext();
-export const myDispatchContext = React.createContext();
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
+
+// 더미 리스트 생성
+const dumyList = [
+  {
+    id: 1,
+    emotion: 2,
+    content: '오늘의 일기 1번',
+    date: 1709011100915,
+  },
+  {
+    id: 2,
+    emotion: 3,
+    content: '오늘의 일기 2번',
+    date: 1709011200916,
+  }, 
+  {
+    id: 3,
+    emotion: 4,
+    content: '오늘의 일기 3번',
+    date: 1709011100917,
+  },
+  {
+    id: 4,
+    emotion: 5,
+    content: '오늘의 일기 4번',
+    date: 1709011100918,
+  },
+  {
+    id: 5,
+    emotion: 3,
+    content: '오늘의 일기 5번',
+    date: 1809011100915,
+  },
+  {
+    id: 6,
+    emotion: 2,
+    content: '오늘의 일기 6번',
+    date: 1909011100915,
+  },
+]
 
 function App() {
-  // const [dumyList, setDumyList] = useState([]);
-  const [dumyList, dispatch] = useReducer(reducer, []);
-  const dataRef = useRef(0);
+  const [data, dispatch] = useReducer(reducer, dumyList);
+  const dataId = useRef(0);
 
-  const getComments = async () => {
-    const comments = await (
-      await fetch("https://jsonplaceholder.typicode.com/comments")
-    ).json();
-    const initialData = comments.slice(0, 20).map((item) => {
-      return {
-        author: item.email,
-        id: dataRef.current++,
-        content: item.body,
-        emotion: Math.floor(Math.random() * 5) + 1,
-        createdAt: new Date().getTime(),
-      };
-    });
-    dispatch({ type: "INIT", data: initialData });
-    // setDumyList(initialData);
-  };
-
-  useEffect(() => {
-    getComments();
-  }, []);
-
-  const onCreate = useCallback((author, content, emotion) => {
+  // CREATE 함수
+  const onCreate = (date, content, emotion) => {
     dispatch({
       type: "CREATE",
-      data: { author, content, emotion, id: dataRef.current },
+      data: {
+        id: dataId.current,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
     });
-    dataRef.current++;
-  }, []);
+    dataId.current++;
+  };
 
-  const onDelete = useCallback((targetId) => {
+  // REMOVE
+  const onRemove = (targetId) => {
     dispatch({ type: "REMOVE", targetId });
-    console.log(`${targetId}가 삭제되었습니다.`);
-  }, []);
+  };
 
-  const onEdit = useCallback((targetId, newContent) => {
-    dispatch({ type: "EDIT", targetId, newContent });
-  }, []);
-
-  const memoizedFncs = useMemo(() => {
-    return { onCreate, onDelete, onEdit };
-  }, []);
-
-  const diaryAnalyst = useMemo(() => {
-    console.log("일기분석시작");
-    const goodEmotionDiary = dumyList.filter((item) => item.emotion > 3).length;
-    const badEmotionDiary = dumyList.length - goodEmotionDiary;
-    const goodRatio = goodEmotionDiary / dumyList.length;
-    return { goodEmotionDiary, badEmotionDiary, goodRatio };
-  }, [dumyList.length]);
-
-  const { goodEmotionDiary, badEmotionDiary, goodRatio } = diaryAnalyst;
+  // EDIT
+  const onEdit = (date, content, emotion, targetId) => {
+    dispatch({
+      type: "EDIT",
+      data: {
+        id: targetId,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
+    });
+  };
 
   return (
     <div className="App">
@@ -112,8 +129,30 @@ function App() {
           <DiaryList />
         </myDispatchContext.Provider>
       </myContext.Provider> */}
-      <MyHeader headtext={'App'}  leftchild={'왼쪽버튼'} rightchild={'오른쪽버튼'} />
-      
+      <MyButton
+        type="positive"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <MyButton
+        type="negative"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <MyButton
+        type="default"
+        text="버튼"
+        onClick={() => {
+          alert("클릭!");
+        }}
+      />
+      <div>이곳은 홈 입니다</div>
+      <div>App.js</div>
+      <div>HOME</div>
     </div>
   );
 }
