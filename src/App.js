@@ -1,14 +1,10 @@
-import React, {
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  useReducer,
-} from "react";
-import { Diary } from "./Diary";
-import { DiaryList } from "./DiaryList";
-import "./App.css";
-import MyButton from "./components/button";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pagess/Home";
+import Diary from "./pagess/Diary";
+import New from "./pagess/New";
+import Edit from "./pagess/Edit";
+import React, { useReducer, useRef } from "react";
+import './App.css';
 
 const reducer = (state, action) => {
   let newState = [];
@@ -117,43 +113,20 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {/* <myContext.Provider value={dumyList}>
-      <myDispatchContext.Provider value={memoizedFncs}>
-        <div>
-          <div>좋은 감정의 일기: {goodEmotionDiary}개</div>
-          <div>안좋은 감점의 일기: {badEmotionDiary}개</div>
-          <div>좋은 일기 비율: {goodRatio*100}%</div>
-        </div>
-          <Diary />
-          <DiaryList />
-        </myDispatchContext.Provider>
-      </myContext.Provider> */}
-      <MyButton
-        type="positive"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="negative"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <MyButton
-        type="default"
-        text="버튼"
-        onClick={() => {
-          alert("클릭!");
-        }}
-      />
-      <div>이곳은 홈 입니다</div>
-      <div>App.js</div>
-      <div>HOME</div>
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={{onCreate, onRemove, onEdit}}>
+        <BrowserRouter>
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<Home />}></Route>
+              <Route path="/New" element={<New />}></Route>
+              <Route path="/Edit" element={<Edit />}></Route>
+              <Route path="/Diary" element={<Diary />}></Route>
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
